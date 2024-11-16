@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\InertiaTestController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +43,9 @@ Route::delete('/inertia/{id}', [InertiaTestController::class, 'destroy'])->name(
 Route::get('/component-test', function () {
     return Inertia::render('ComponentTest');
 });
+
+Route::resource('items', ItemController::class)
+    ->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
