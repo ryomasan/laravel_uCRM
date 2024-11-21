@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreItemRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
+use Inertia\Inertia;
 
 class ItemController extends Controller
 {
@@ -15,7 +16,9 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        return Inertia::render('Items/index', [
+            'items' => Item::select('id', 'name', 'price', 'memo', 'is_selling')->get()
+        ]);
     }
 
     /**
@@ -25,7 +28,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Items/create');
     }
 
     /**
@@ -36,7 +39,24 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request)
     {
-        //
+        // try {
+        Item::create([
+            'name' => $request->name,
+            'memo' => $request->memo,
+            'price' => $request->price,
+        ]);
+
+        return to_route('items.index')->with([
+            'message' => "登録しました",
+            'status' => "success"
+        ]);
+        // } catch (\Illuminate\Validation\ValidationException $e) {
+        //     // Custom response or logging could be done here
+        //     return response()->json([
+        //         'message' => 'Validation failed',
+        //         'errors' => $e->errors(),
+        //     ], 422); // Respond with 422 Unprocessable Entity
+        // }
     }
 
     /**
@@ -47,7 +67,9 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        //
+        return Inertia::render('Items/show', [
+            'item' => $item,
+        ]);
     }
 
     /**
@@ -58,7 +80,9 @@ class ItemController extends Controller
      */
     public function edit(Item $item)
     {
-        //
+        return Inertia::render('Items/edit', [
+            'item' => $item
+        ]);
     }
 
     /**
@@ -70,9 +94,18 @@ class ItemController extends Controller
      */
     public function update(UpdateItemRequest $request, Item $item)
     {
-        //
+        $id = $item->id;
+        Item::where('id', $id)->update([
+            'name' => $request->name,
+            'price' => $request->price,
+            'memo' => $request->memo,
+            'is_selling' => $request->is_selling,
+        ]);
+        return to_route('items.index')->with([
+            'message' => "更新しました",
+            'status' => "success"
+        ]);
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -81,6 +114,10 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        //
+        $item->delete();
+        return to_route('items.index')->with([
+            'message' => "削除しました",
+            'status' => "success"
+        ]);
     }
 }

@@ -14,6 +14,17 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            animation: {
+                fadeInOut: 'fadeInOut 1s ease-in-out',
+            },
+            keyframes: {
+                fadeInOut: {
+                    '0%': { opacity: 0 },
+                    '30%': { opacity: 1 }, 
+                    '70%': { opacity: 1 }, 
+                    '100%': { opacity: 0 },
+                },
+            },
         },
     },
 
