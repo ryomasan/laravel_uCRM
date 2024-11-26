@@ -88,12 +88,6 @@ const deleteItem = (itemId) => {
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                             getItemStatus(item.is_selling) }}</td>
-                                        <!-- <td v-if="item.is_selling === 0"
-                                            class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                            販売中</td>
-                                        <td v-if="item.is_selling === 1"
-                                            class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                            在庫切れ</td> -->
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                             <!-- 　tr内の@clickへのpropagationの阻止　 -->
                                             <button @click.stop="deleteItem(item.id)"
