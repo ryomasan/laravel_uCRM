@@ -38,7 +38,7 @@ class InertiaTestController extends Controller
      */
     public function store(Request $request)
     {
-        try {
+        // try {
             $validated = $request->validate([
                 'title' => ['required', 'min:4', 'max:255'],
                 'content' => ['required', 'min:10', 'max:255'],
@@ -51,13 +51,13 @@ class InertiaTestController extends Controller
             return to_route('inertia.index')->with([
                 'message' => "登録しました"
             ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Custom response or logging could be done here
-            return response()->json([
-                'message' => 'Validation failed',
-                'errors' => $e->errors(),
-            ], 422); // Respond with 422 Unprocessable Entity
-        }
+        // } catch (\Illuminate\Validation\ValidationException $e) {
+        //     // Custom response or logging could be done here
+        //     return response()->json([
+        //         'message' => 'Validation failed',
+        //         'errors' => $e->errors(),
+        //     ], 422); // Respond with 422 Unprocessable Entity
+        // }
     }
 
     /**

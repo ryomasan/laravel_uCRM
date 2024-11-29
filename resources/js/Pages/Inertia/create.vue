@@ -1,6 +1,8 @@
 <script setup>
 import { reactive } from 'vue'
 import { Inertia } from '@inertiajs/inertia';
+import ValidationErrors from '@/Components/ValidationErrors.vue';
+
 
 const props = defineProps({
   errors: Object,
@@ -17,13 +19,14 @@ function submit() {
 </script>
 
 <template>
+  <ValidationErrors :errors="props.errors"/>
   <form @submit.prevent="submit">
     <label for="title">タイトル:</label>
     <input id="title" v-model="form.title" /><br>
-    <div v-if="errors.title">{{ props.errors.title }}</div>
+    <!-- <div v-if="errors.title">{{ props.errors.title }}</div> -->
     <label for="content">内容:</label>
     <input id="content" v-model="form.content" /><br>
-    <div v-if="errors.content">{{ props.errors.content }}</div>
+    <!-- <div v-if="errors.content">{{ props.errors.content }}</div> -->
     <button type="submit">Submit</button>
   </form>
 </template>
