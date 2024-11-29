@@ -159,5 +159,11 @@ return [
         'name'=>'商品名',
         'memo'=>'備考',
         'price'=>'価格',
+        'kana'=>'カナ',
+        'tel'=>'電話番号',
+        'postcode'=>'郵便番号',
+        'address'=>'現住所',
+        'birthday'=>'生年月日',
+        'gender'=>'性別',
     ]
 ];
