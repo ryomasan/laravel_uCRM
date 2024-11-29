@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
 
 class CustomerController extends Controller
 {
@@ -13,9 +16,27 @@ class CustomerController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+
+    public function index(Request $request)
     {
-        //
+
+        // $customers = Customer::searchedCustomers($request->search)->select('id', 'name', 'kana', 'tel')->paginate(10);
+        $query = Customer::query();
+
+        // 検索条件が指定されている場合
+        if ($request->search) {
+            $search = $request->search;
+            // 顧客情報を検索（例: 名前、メール、電話番号に検索文字列が含まれる場合）
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('kana', 'like', '%' . $search . '%')
+                    ->orWhere('tel', 'like', '%' . $search . '%');
+            });
+        }
+        $customers = $query->paginate(50);
+        return Inertia::render('Customers/index', [
+            'customers' => $customers,
+        ]);
     }
 
     /**
@@ -25,7 +46,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Customers/create');
     }
 
     /**
@@ -36,7 +57,22 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request)
     {
-        //
+        Customer::create([
+            'name' => $request->name,
+            'kana' => $request->kana,
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'postcode' => $request->postcode,
+            'address' => $request->prefecture . $request->city . $request->address,
+            'birthday' => $request->birthday,
+            'gender' => $request->gender,
+            'memo' => $request->memo
+        ]);
+
+        return to_route('customers.index')->with([
+            'message' => "登録しました",
+            'status' => "success"
+        ]);
     }
 
     /**
@@ -81,6 +117,10 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer)
     {
-        //
+        $customer->delete();
+        return to_route('customers.index')->with([
+            'message' => "削除しました",
+            'status' => "success"
+        ]);
     }
 }
