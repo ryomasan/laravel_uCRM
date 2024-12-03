@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/inertia-vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
-import { computed } from 'vue';
+import { computed, onMounted } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 
 
@@ -12,16 +12,23 @@ const props = defineProps({
     items: Object
 })
 
+// const getItemStatus = computed(() => {
+//     return props.items.forEach(item => {
+//         item.stocks > 0 ? item.isSelling == 0 : item.isSelling == 1;
+//         return item.isSelling === 0 ? '在庫切れ' : '販売中';
+//     });
+//     // return props.items.forEach(item => {
+//     //     console.log(item)
+//     //     return item.stocks > 0 ? "販売中" : "在庫切れ";
+//     // });
+// });
+
 const getItemStatus = (isSelling) => {
-    return computed(() => {
-        return isSelling === 0 ? '販売中' : '在庫切れ';
+    props.items.forEach(item => {
+        item.stocks > 0 ? item.isSelling = 0 : item.isSelling = 1;
     });
+    return isSelling == 0 ? '販売中' : '在庫切れ';
 }
-
-// const getItemStatus = computed((isSelling) => {
-//     return isSelling == 0 ? '在庫切れ' : '販売中'
-// }
-
 
 
 const showItem = (itemId) => {
@@ -33,6 +40,10 @@ const deleteItem = (itemId) => {
         onBefore: () => confirm("本当に削除しますか？"),
     });
 }
+
+// onMounted(() => {
+//   console.log(getItemStatus());  
+// })
 
 </script>
 
@@ -50,7 +61,7 @@ const deleteItem = (itemId) => {
         <section class="text-gray-600 body-font">
             <div class="container px-5 py-24 mx-auto">
                 <div class="lg:w-3/4 mx-auto overflow-auto">
-                    <div class="relative">
+                    <!-- <div class="relative"> -->
                         <!-- Fixed Header -->
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                             <thead>
@@ -69,10 +80,13 @@ const deleteItem = (itemId) => {
                                         価格</th>
                                     <th
                                         class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        在庫</th>
+                                        在庫数</th>
                                     <th
                                         class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        </th>
+                                        在庫状況</th>
+                                    <th
+                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    </th>
                                 </tr>
                             </thead>
                         </table>
@@ -86,19 +100,21 @@ const deleteItem = (itemId) => {
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
-                                            getItemStatus(item.is_selling) }}</td>
+                                            getItemStatus(item.isSelling) }}
+                                        </td>
                                         <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                             <!-- 　tr内の@clickへのpropagationの阻止　 -->
                                             <button @click.stop="deleteItem(item.id)"
                                                 class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                                            削除</button>
+                                                削除</button>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                     <a class="text-indigo-500 inline-flex items-center md:mb-2 lg:mb-0">Learn More

@@ -13,7 +13,6 @@ import pref from '@/pref';
 
 const props = defineProps({
     errors: Object,
-    customer: Object
 })
 
 const form = reactive({

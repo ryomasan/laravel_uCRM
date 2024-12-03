@@ -4,12 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Purchase;
 
 class Customer extends Model
 {
     use HasFactory;
-    protected $fillable = ['name', 'kana', 'tel', 'email', 'birthday', 'address', 'postcode', 'gender', 'memo'];
+    public function purchases()
+    {
+        return $this->HasMany(Purchase::class);
+    }
+
     public function scopeSearchedCustomers($query, $input = null)
     {
         if (!empty($input)) {
@@ -23,4 +28,6 @@ class Customer extends Model
             }
         }
     }
+
+    protected $fillable = ['name', 'kana', 'tel', 'email', 'birthday', 'address', 'postcode', 'gender', 'memo'];
 }

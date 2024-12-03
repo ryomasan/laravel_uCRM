@@ -5,13 +5,13 @@ const props = defineProps({
     links: Array
 })
 
-// onMounted(() => {
-//     console.log(props.links)
-// })
+onMounted(() => {
+    console.log(props.links.length)
+})
 
 </script>
 <template>
-    <div v-if="links.length > 3">
+    <div v-if="props.links.length > 3">
         <div class="flex flex-wrap -mb-1">
             <template v-for="(link, index) in props.links" :key="index">
                 <div v-if="link.url === null" class="mr-1 mb-1 px-4 py-3 text-sm leading-4

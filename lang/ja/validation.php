@@ -159,6 +159,7 @@ return [
         'name'=>'商品名',
         'memo'=>'備考',
         'price'=>'価格',
+        'stocks'=>'在庫数',
         'kana'=>'カナ',
         'tel'=>'電話番号',
         'postcode'=>'郵便番号',
