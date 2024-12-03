@@ -11,7 +11,7 @@ import jsonpAdapter from 'axios-jsonp'
 import configPref from '@/pref';
 import pref from '@/pref';
 import { getToday } from '@/common';
-import MicroModal from '@/Components/MIcroModal.vue';
+import MicroModal from '@/Components/MicroModal.vue';
 
 
 
