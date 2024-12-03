@@ -17,7 +17,7 @@ class ItemController extends Controller
     public function index()
     {
         return Inertia::render('Items/index', [
-            'items' => Item::select('id', 'name', 'price', 'memo', 'is_selling')->get()
+            'items' => Item::select('id', 'name', 'price', 'memo', 'stocks', 'is_selling')->get()
         ]);
     }
 
@@ -44,6 +44,7 @@ class ItemController extends Controller
             'name' => $request->name,
             'memo' => $request->memo,
             'price' => $request->price,
+            'stocks' => $request->stocks,
         ]);
 
         return to_route('items.index')->with([
@@ -98,6 +99,7 @@ class ItemController extends Controller
         Item::where('id', $id)->update([
             'name' => $request->name,
             'price' => $request->price,
+            'stocks' => $request->stocks,
             'memo' => $request->memo,
             'is_selling' => $request->is_selling,
         ]);

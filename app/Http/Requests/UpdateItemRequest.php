@@ -27,6 +27,7 @@ class UpdateItemRequest extends FormRequest
             'name' => ['required', 'max:50'],
             'memo' => ['required', 'max:255'],
             'price' => ['required', 'numeric'],
+            'stocks' => ['required', 'numeric'],
         ];
     }
 }

@@ -12,7 +12,8 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen">
+        <div class="h-screen">
+
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -35,6 +36,10 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                                 <NavLink :href="route('customers.index')" :active="route().current('customers.index')">
                                     顧客管理
+                                </NavLink>
+                                <NavLink :href="route('purchases.create')"
+                                    :active="route().current('customers.create')">
+                                    購入画面
                                 </NavLink>
                             </div>
                         </div>
@@ -99,8 +104,13 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
                             商品管理
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('customers.index')" :active="route().current('customers.index')">
+                        <ResponsiveNavLink :href="route('customers.index')"
+                            :active="route().current('customers.index')">
                             顧客管理
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('purchases.create')"
+                            :active="route().current('customers.create')">
+                            購入画面
                         </ResponsiveNavLink>
                     </div>
 
@@ -130,8 +140,9 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </header>
 
+
             <!-- Page Content -->
-            <main>
+            <main class="h-4/5">
                 <slot />
             </main>
         </div>

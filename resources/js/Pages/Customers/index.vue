@@ -8,6 +8,7 @@ import FlashMessage from '@/Components/FlashMessage.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 import Pagination from '@/Components/Pagination.vue';
 import { isEmpty } from 'lodash';
+import axios from 'axios';
 
 const props = defineProps({
     customers: Object,
@@ -34,7 +35,7 @@ const searchedCustomers = computed(() => {
 )
 
 onMounted(() => {
-  console.log(props.customers.data)  
+    console.log(props.customers)
 })
 
 // const state = reactive({
@@ -97,14 +98,14 @@ onMounted(() => {
                 <FlashMessage />
             </div>
         </template>
-        <section class="text-gray-600 body-font">
+        <section class="text-gray-600 body-font ">
             <div class="container px-5 mx-auto">
-                <input type="text" name="search" v-model="search">
-                <button class="bg-blue-300 text-white py-2 px-2" @click="searchCustomers">検索</button>
-            </div>
-            <div class="container px-5 mx-auto">
+                <div class="container lg:w-3/4 mx-auto  my-10">
+                    <input type="text" name="search" v-model="search">
+                    <button class="bg-blue-300 text-white py-2 px-2 mx-4" @click="searchCustomers">検索</button>
+                </div>
                 <div class="lg:w-3/4 mx-auto overflow-auto">
-                    <div class="relative">
+                    <!-- <div class="relative"> -->
                         <!-- Fixed Header -->
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                             <thead>
@@ -152,7 +153,7 @@ onMounted(() => {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div>
                 </div>
@@ -177,7 +178,6 @@ onMounted(() => {
                     顧客登録</Link>
                 </div>
             </div>
-
         </section>
     </AuthenticatedLayout>
 </template>
