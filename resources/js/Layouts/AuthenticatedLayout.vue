@@ -32,14 +32,17 @@ const showingNavigationDropdown = ref(false);
                                     Dashboard
                                 </NavLink>
                                 <NavLink :href="route('items.index')" :active="route().current('items.index')">
-                                    商品管理
+                                    商品一覧
                                 </NavLink>
                                 <NavLink :href="route('customers.index')" :active="route().current('customers.index')">
-                                    顧客管理
+                                    顧客一覧
                                 </NavLink>
                                 <NavLink :href="route('purchases.create')"
-                                    :active="route().current('customers.create')">
+                                    :active="route().current('purchases.create')">
                                     購入画面
+                                </NavLink>
+                                <NavLink :href="route('purchases.index')" :active="route().current('purchases.index')">
+                                    購入履歴
                                 </NavLink>
                             </div>
                         </div>
@@ -102,15 +105,19 @@ const showingNavigationDropdown = ref(false);
                             Dashboard
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('items.index')" :active="route().current('items.index')">
-                            商品管理
+                            商品一覧
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('customers.index')"
                             :active="route().current('customers.index')">
-                            顧客管理
+                            顧客一覧
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('purchases.create')"
                             :active="route().current('customers.create')">
                             購入画面
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('purchases.index')"
+                            :active="route().current('purchases.index')">
+                            購入履歴
                         </ResponsiveNavLink>
                     </div>
 

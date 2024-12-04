@@ -5,108 +5,93 @@ import { Link } from '@inertiajs/inertia-vue3';
 import FlashMessage from '@/Components/FlashMessage.vue';
 import { computed, onMounted, ref } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { isEmpty } from 'lodash';
+import { getDate } from '@/common';
 import Pagination from '@/Components/Pagination.vue';
-
+import { isEmpty } from 'lodash';
 
 const props = defineProps({
-    items: Object
+    orders: Object
 })
-
-// const getItemStatus = computed(() => {
-//     return props.items.forEach(item => {
-//         item.stocks > 0 ? item.isSelling == 0 : item.isSelling == 1;
-//         return item.isSelling === 0 ? '在庫切れ' : '販売中';
-//     });
-//     // return props.items.forEach(item => {
-//     //     console.log(item)
-//     //     return item.stocks > 0 ? "販売中" : "在庫切れ";
-//     // });
-// });
 
 let search = ref('')
 
-const searchItems = () => {
-    Inertia.get(route('items.index', { search: search.value }))
+const searchOrders = () => {
+    Inertia.get(route('purchases.index', { search: search.value }))
 }
 
-const searchedItems = computed(() => {
+const searchedOrders = computed(() => {
     if (isEmpty(search.value)) {
-        return props.items.data
+        return props.orders.data
     } else {
-        const result = props.items.data.filter(item =>
-            item.name.includes(search.value)
+        const result = props.orders.data.filter(order =>
+            order.name.includes(search.value) ||
+            order.kana.includes(search.value) ||
+            order.tel.includes(search.value)
         )
         return result
     }
 }
 )
 
-const getItemStatus = (isSelling) => {
-    props.items.data.forEach(item => {
-        item.stocks > 0 ? item.isSelling = 0 : item.isSelling = 1;
-    });
-    return isSelling == 0 ? '販売中' : '在庫切れ';
-}
-
-
-const showItem = (itemId) => {
-    Inertia.get(`/items/${itemId}`);
-}
-
-const deleteItem = (itemId) => {
-    Inertia.delete(`/items/${itemId}`, {
+const deleteHistory = (orderId) => {
+    Inertia.delete(`/purchases/${orderId}`, {
         onBefore: () => confirm("本当に削除しますか？"),
     });
 }
 
-onMounted(() => {
-    console.log(props.items.links);
-})
+// onMounted(() => {
+//   console.log(getItemStatus());  
+// })
 
 </script>
 
 <template>
 
-    <Head title="商品一覧" />
+    <Head title="購入履歴" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between gap-96">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">商品一覧</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">購入履歴</h2>
                 <FlashMessage />
             </div>
         </template>
         <section class="text-gray-600 body-font">
-            <div class="container px-5 mx-auto">
+            <div class="container px-5 mx-auto my-10">
                 <div class="container lg:w-3/4 mx-auto  my-10">
                     <input type="text" name="search" v-model="search">
-                    <button class="bg-blue-300 text-white py-2 px-2 mx-4" @click="searchItems">検索</button>
+                    <button class="bg-blue-300 text-white py-2 px-2 mx-4" @click="searchOrders">検索</button>
                 </div>
                 <div class="lg:w-3/4 mx-auto overflow-auto">
-                    <!-- <div class="relative"> -->
                     <!-- Fixed Header -->
                     <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                         <thead>
                             <tr>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
-                                    商品No</th>
+                                    購買id</th>
                                 <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    顧客名</th>
+                                <!-- <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     商品名</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    備考</th>
+                                    数量</th> -->
+
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    価格</th>
+                                    合計金額</th>
+                                <!-- <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    ステータス</th> -->
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    在庫数</th>
+                                    購入日</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    在庫状況</th>
+                                </th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                 </th>
@@ -118,18 +103,29 @@ onMounted(() => {
                     <div class="overflow-y-scroll h-[350px]">
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                             <tbody>
-                                <tr v-for="item in searchedItems" :key="item.id" @click="showItem(item.id)">
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
+                                <tr v-for="order in searchedOrders">
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.id }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.customer_name
+                                        }}</td>
+                                    <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.item_name }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.quantity }}
+                                    </td> -->
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.total }}
+                                    </td>
+                                    <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.status }}</td> -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
-                                        getItemStatus(item.isSelling) }}
+                                        getDate(order.created_at) }}
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                         <!-- 　tr内の@clickへのpropagationの阻止　 -->
-                                        <button @click.stop="deleteItem(item.id)"
+                                        <button @click.stop="editHistory(order.id)"
+                                            class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                            編集</button>
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                        <button @click.stop="deleteHistory(order.id)"
                                             class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
                                             削除</button>
                                     </td>
@@ -140,13 +136,7 @@ onMounted(() => {
                     <!-- </div> -->
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Pagination :links=props.items.links></Pagination>
-                </div>
-                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Link as="button"
-                        class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
-                        :href="route('items.create')">
-                    商品登録</Link>
+                    <Pagination :links=props.orders.links></Pagination>
                 </div>
             </div>
         </section>

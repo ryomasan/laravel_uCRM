@@ -16,8 +16,10 @@ class ItemController extends Controller
      */
     public function index()
     {
+        $query = Item::query();
+        $items = $query->paginate(50);
         return Inertia::render('Items/index', [
-            'items' => Item::select('id', 'name', 'price', 'memo', 'stocks', 'is_selling')->get()
+            'items' => $items
         ]);
     }
 
