@@ -133,9 +133,9 @@ onMounted(() => {
                     <div class="overflow-y-scroll h-[350px]">
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                             <tbody>
-                                <!-- <tr v-for="customer in state.customers" :key="customer.id" @click="showCustomer(customer.id)"> -->
-                                <tr v-for="customer in searchedCustomers" :key="customer.id"
-                                    @click="showCustomer(customer.id)">
+                                <tr v-for="customer in searchedCustomers" :key="customer.id">
+                                    <!-- <tr v-for="customer in searchedCustomers" :key="customer.id"
+                                    @click="showCustomer(customer.id)"> -->
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.id }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.name }}
                                     </td>

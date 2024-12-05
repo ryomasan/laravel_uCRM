@@ -24,14 +24,16 @@ const searchedOrders = computed(() => {
         return props.orders.data
     } else {
         const result = props.orders.data.filter(order =>
-            order.name.includes(search.value) ||
-            order.kana.includes(search.value) ||
-            order.tel.includes(search.value)
+            order.customer_name.includes(search.value)     
         )
         return result
     }
 }
 )
+
+const showHistory = (orderId) => {
+    Inertia.get(`/purchases/${orderId}`)
+}
 
 const deleteHistory = (orderId) => {
     Inertia.delete(`/purchases/${orderId}`, {
@@ -39,9 +41,9 @@ const deleteHistory = (orderId) => {
     });
 }
 
-// onMounted(() => {
-//   console.log(getItemStatus());  
-// })
+onMounted(() => {
+  console.log(props.orders.data);  
+})
 
 </script>
 
@@ -89,9 +91,9 @@ const deleteHistory = (orderId) => {
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     購入日</th>
-                                <th
+                                <!-- <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                </th>
+                                </th> -->
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                 </th>
@@ -103,7 +105,7 @@ const deleteHistory = (orderId) => {
                     <div class="overflow-y-scroll h-[350px]">
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                             <tbody>
-                                <tr v-for="order in searchedOrders">
+                                <tr v-for="order in searchedOrders" @click="showHistory(order.id)">
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.id }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ order.customer_name
                                         }}</td>
@@ -117,14 +119,12 @@ const deleteHistory = (orderId) => {
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                         getDate(order.created_at) }}
                                     </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                    <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                         <button @click.stop="editHistory(order.id)"
                                             class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
                                             編集</button>
-                                    </td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                    </td> -->
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">                
                                         <button @click.stop="deleteHistory(order.id)"
                                             class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
                                             削除</button>
