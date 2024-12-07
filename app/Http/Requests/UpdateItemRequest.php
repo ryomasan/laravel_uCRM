@@ -24,10 +24,11 @@ class UpdateItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:50'],
-            'memo' => ['required', 'max:255'],
+            'name' => ['required', 'max:50'],            
             'price' => ['required', 'numeric'],
             'stocks' => ['required', 'numeric'],
+            'memo' => ['nullable', 'max:255'],
+            // 'is_selling' => ['required', 'boolean']
         ];
     }
 }

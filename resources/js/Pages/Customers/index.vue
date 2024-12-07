@@ -34,6 +34,18 @@ const searchedCustomers = computed(() => {
 }
 )
 
+const showCustomer = (customerId) => {
+    Inertia.get(`/customers/${customerId}`, customerId)
+}
+
+const deleteCustomer = (customerId) => {
+    Inertia.delete(`/customers/${customerId}`, {
+        onBefore: () => {
+            confirm("本当に削除しますか？")
+        }
+    })
+}
+
 onMounted(() => {
     console.log(props.customers)
 })
@@ -94,8 +106,8 @@ onMounted(() => {
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between gap-96">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">顧客管理</h2>
-                <FlashMessage />
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">顧客一覧</h2>
+                <!-- <FlashMessage /> -->
             </div>
         </template>
         <section class="text-gray-600 body-font ">
@@ -108,25 +120,26 @@ onMounted(() => {
                     <!-- <div class="relative"> -->
                         <!-- Fixed Header -->
                         <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
-                            <thead>
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
-                                        顧客No</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        顧客名</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        カナ</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        電話番号</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    </th>
+                            <tbody>
+                                <tr v-for="customer in searchedCustomers" :key="customer.id"
+                                    @click="showCustomer(customer.id)">
+                                    <!-- <tr v-for="customer in searchedCustomers" :key="customer.id"
+                                    @click="showCustomer(customer.id)"> -->
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.id }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.name }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.kana }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.tel }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                        <button @click.stop="deleteCustomer(customer.id)"
+                                            class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                                            削除</button>
+                                    </td>
                                 </tr>
-                            </thead>
+                            </tbody>
                         </table>
 
                         <!-- Scrollable Body -->
@@ -162,7 +175,7 @@ onMounted(() => {
                 </InfiniteLoading> -->
 
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Pagination :links=props.customers.links></Pagination>
+                    <Pagination :links=props.items.links />
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
 

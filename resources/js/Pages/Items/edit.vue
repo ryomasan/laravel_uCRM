@@ -17,7 +17,7 @@ const form = reactive({
     name: props.item.name,
     memo: props.item.memo,
     price: props.item.price,
-    is_selling: props.item.is_selling
+    // is_selling: props.item.is_selling
 })
 
 // const updateItem = (itemId) => {
@@ -65,16 +65,21 @@ const updateItem = (itemId) => {
                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex flex-wrap justify-center -m-2">
-                            <div class="relative w-[300px]">
-                                <label for="memo" class="leading-7 text-sm text-gray-600">Memo</label>
-                                <textarea id="memo" v-model="form.memo" name="memo"
-                                    class="w-full h-[100px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <label for="stocks" class="leading-7 text-sm text-gray-600">在庫数</label>
+                                    <input type="number" v-model="form.stocks" id="stocks" name="stocks"
+                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex flex-wrap justify-center -m-2">
-                            <div class="relative w-[300px]">
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <label for="memo" class="leading-7 text-sm text-gray-600">備考</label>
+                                    <textarea id="memo" v-model="form.memo" name="memo"
+                                        class="w-full h-[100px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                </div>
+                            </div>
+                            <!-- <div class="p-2 w-full">
                                 <input type="radio" id="is_selling" v-model="form.is_selling" name="is_selling"
                                     :value=0>
                                 <label for="is_selling" class="leading-7 text-sm text-gray-600"
@@ -82,7 +87,7 @@ const updateItem = (itemId) => {
                                 <input type="radio" id="sold_out" v-model="form.is_selling"
                                     :checked="form.is_selling === 1" name="is_selling" :value=1>
                                 <label for="sold_out" class="leading-7 text-sm text-gray-600">在庫切れ</label>
-                            </div>
+                            </div> -->
                         </div>
                         <!-- </div> -->
                         <div class="p-2 w-full">

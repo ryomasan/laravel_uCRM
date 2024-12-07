@@ -15,7 +15,8 @@ const props = defineProps({
 const form = reactive({
     name: null,
     memo: null,
-    price: null
+    price: null,
+    stocks: null
 })
 
 const storeItem = () => {
@@ -56,12 +57,26 @@ const storeItem = () => {
                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                 </div>
                             </div>
-                        </div>
-                        <div class="flex flex-wrap justify-center -m-2">
-                            <div class="relative w-[300px]">
-                                <label for="memo" class="leading-7 text-sm text-gray-600">Memo</label>
-                                <textarea id="memo" v-model="form.memo" name="memo"
-                                    class="w-full h-[100px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <label for="stocks" class="leading-7 text-sm text-gray-600">在庫数</label>
+                                    <input type="number" v-model="form.stocks" id="stocks" name="stocks"
+                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                </div>
+                            </div>
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <label for="memo" class="leading-7 text-sm text-gray-600">Memo</label>
+                                    <textarea id="memo" v-model="form.memo" name="memo"
+                                        class="w-full h-[100px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"></textarea>
+                                </div>
+                            </div>
+                            <!-- </div> -->
+                            <div class="p-2 w-full">
+                                <button type="submit"
+                                    class="flex mx-auto ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                    登録
+                                </button>
                             </div>
                         </div>
                         <!-- </div> -->
