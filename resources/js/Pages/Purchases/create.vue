@@ -25,7 +25,10 @@ const form = reactive({
     date: null,
     status: true,
     customer_id: null,
-    items: [],
+    items: {
+        id: null,
+        quantity: null
+    },
     purchase_num: []
 })
 
@@ -59,12 +62,7 @@ const setCustomer = (customerId, customerName) => {
 }
 
 watch(matchedCustomers, (newVal) => {
-    openSearchBox.value = newVal.length > 0;
-    // if (newVal.length > 0) {
-    //     openSearchBox.value = true
-    // } else {
-    //     openSearchBox.value = false
-    // }
+    openSearchBox.value = newVal.length > 0;    
 })
 
 const storePurchase = () => {
@@ -106,7 +104,7 @@ const total_price_all_products = computed(() => {
 
 onMounted(() => {
     form.date = getToday()
-    console.log(selectedCustomer)
+    console.log(purchase_num_arr)
 }   // console.log(purchase_num_arr.value)
 )
 
@@ -202,7 +200,7 @@ onMounted(() => {
                                             <tr v-for="(item, index) in props.items" :key="index">
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                                     item.id
-                                                }}</td>
+                                                    }}</td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                                     item.name }}
                                                 </td>

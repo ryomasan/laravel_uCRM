@@ -89,12 +89,12 @@ onMounted(() => {
 
 <template>
 
-    <Head title="顧客管理" />
+    <Head title="顧客一覧" />
 
     <AuthenticatedLayout>
         <template #header>
             <div class="flex justify-between gap-96">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">顧客管理</h2>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">顧客一覧</h2>
                 <FlashMessage />
             </div>
         </template>
@@ -106,53 +106,53 @@ onMounted(() => {
                 </div>
                 <div class="lg:w-3/4 mx-auto overflow-auto">
                     <!-- <div class="relative"> -->
-                        <!-- Fixed Header -->
-                        <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
-                            <thead>
-                                <tr>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
-                                        顧客No</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        顧客名</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        カナ</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                        電話番号</th>
-                                    <th
-                                        class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    </th>
-                                </tr>
-                            </thead>
-                        </table>
+                    <!-- Fixed Header -->
+                    <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
+                        <thead>
+                            <tr>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                    顧客No</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    顧客名</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    カナ</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    電話番号</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
 
-                        <!-- Scrollable Body -->
-                        <div class="overflow-y-scroll h-[350px]">
-                            <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
-                                <tbody>
-                                    <!-- <tr v-for="customer in state.customers" :key="customer.id" @click="showCustomer(customer.id)"> -->
-                                    <tr v-for="customer in searchedCustomers" :key="customer.id"
-                                        @click="showCustomer(customer.id)">
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.id }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.name }}
-                                        </td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.kana }}
-                                        </td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.tel }}
-                                        </td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                            <!-- 　tr内の@clickへのpropagationの阻止　 -->
-                                            <button @click.stop="deleteCustomer(customer.id)"
-                                                class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                                                削除</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <!-- Scrollable Body -->
+                    <div class="overflow-y-scroll h-[350px]">
+                        <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
+                            <tbody>
+                                <tr v-for="customer in searchedCustomers" :key="customer.id">
+                                    <!-- <tr v-for="customer in searchedCustomers" :key="customer.id"
+                                    @click="showCustomer(customer.id)"> -->
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.id }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.name }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.kana }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ customer.tel }}
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                        <button @click.stop="deleteCustomer(customer.id)"
+                                            class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                                            削除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     <!-- </div> -->
                 </div>
                 <div>
@@ -165,13 +165,6 @@ onMounted(() => {
                     <Pagination :links=props.customers.links></Pagination>
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-
-                    <a class="text-indigo-500 inline-flex customers-center md:mb-2 lg:mb-0">Learn More
-                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
-                            <path d="M5 12h14M12 5l7 7-7 7"></path>
-                        </svg>
-                    </a>
                     <Link as="button"
                         class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
                         :href="route('customers.create')">

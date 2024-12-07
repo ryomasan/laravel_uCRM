@@ -6,6 +6,7 @@ use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Requests\UpdatePurchaseRequest;
 use App\Models\Customer;
 use App\Models\Item;
+use App\Models\Order;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -19,7 +20,11 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        //
+        // $purchases = Order::paginate(50);
+        $orders = Order::groupBy('id')->selectRaw('id, customer_name, sum(subtotal) as total, status, created_at')->paginate(50);
+        return Inertia::render('Purchases/index', [
+            'orders' => $orders
+        ]);
     }
 
     /**
@@ -65,7 +70,7 @@ class PurchaseController extends Controller
 
             DB::commit();
 
-            return to_route('dashboard')->with([
+            return to_route('purchases.index')->with([
                 'message' => "登録しました",
                 'status' => "success"
             ]);
@@ -86,7 +91,14 @@ class PurchaseController extends Controller
      */
     public function show(Purchase $purchase)
     {
-        //
+        $items = Order::where('id', $purchase->id)->get();
+        $order = Order::groupBy('id')->where('id', $purchase->id)->selectRaw('id, customer_name, sum(subtotal) as total, created_at, updated_at')->get();
+        // $order = Order::groupBy('id')->where('id', $purchase->id)->selectRaw('id, customer_name, item_name, quantity, subtotal, sum(subtotal) as total, created_at')->get();
+        // $order = Order::groupBy('id')->selectRaw('id, customer_name, item_name, quantity, subtotal, sum(subtotal) as total, status, created_at, updated_at')->get()->where('id', $purchase->id);
+        return Inertia::render('Purchases/show', [
+            'items' => $items,
+            'order' => $order,
+        ]);
     }
 
     /**
@@ -97,7 +109,19 @@ class PurchaseController extends Controller
      */
     public function edit(Purchase $purchase)
     {
-        //
+        $items = Order::where('id', $purchase->id)
+            ->get();
+        $order = Order::groupBy('id')
+            ->where('id', $purchase->id)
+            ->selectRaw('id, customer_id, customer_name, status, created_at')
+            ->get();
+        // dd($order);
+        // $order = Order::groupBy('id')->where('id', $purchase->id)->selectRaw('id, customer_name, item_name, quantity, subtotal, sum(subtotal) as total, created_at')->get();
+        // $order = Order::groupBy('id')->selectRaw('id, customer_name, item_name, quantity, subtotal, sum(subtotal) as total, status, created_at, updated_at')->get()->where('id', $purchase->id);
+        return Inertia::render('Purchases/edit', [
+            'items' => $items,
+            'order' => $order
+        ]);
     }
 
     /**
@@ -109,7 +133,31 @@ class PurchaseController extends Controller
      */
     public function update(UpdatePurchaseRequest $request, Purchase $purchase)
     {
-        //
+        DB::beginTransaction();
+        // dd($request);
+        try {
+
+            $purchase->status = $request->status;
+            $purchase->save();
+
+            foreach ($request->items as $item) {
+                $purchase->items()->updateExistingPivot($item['id'], [
+                    'quantity' => $item['quantity']
+                ]);
+            }
+            DB::commit();
+
+            return to_route('purchases.show', $purchase->id)->with([
+                'message' => "登録しました",
+                'status' => "success"
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 422); // Respond with 422 Unprocessable Entity
+        }
     }
 
     /**
