@@ -34,6 +34,7 @@ class PurchaseController extends Controller
      */
     public function create()
     {
+        
         $customers = Customer::select('id', 'name', 'kana', 'tel')->get();
         $items = Item::select('id', 'name', 'price', 'stocks')->get();
         return Inertia::render('Purchases/create', [

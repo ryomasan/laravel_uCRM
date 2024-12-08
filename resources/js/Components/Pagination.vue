@@ -5,9 +5,9 @@ const props = defineProps({
     links: Array
 })
 
-onMounted(() => {
-    console.log(props.links.length)
-})
+// onMounted(() => {
+//     console.log(props.links.length)
+// })
 
 </script>
 <template>

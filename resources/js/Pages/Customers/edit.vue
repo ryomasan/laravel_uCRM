@@ -3,8 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 // import { Link } from '@inertiajs/inertia-vue3';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
-import { onMounted, reactive } from 'vue'
-import { reactive } from 'vue'
+import { computed, onMounted, reactive, watch } from 'vue'
 import jsonpAdapter from 'axios-jsonp'
 import { Inertia } from '@inertiajs/inertia'
 import BackToPreviousPageButton from '@/Components/BackToPreviousPageButton.vue';
@@ -15,6 +14,16 @@ const props = defineProps({
     customer: Object
 })
 
+const formattedCustomers = computed(() => {
+    // 例: "東京都新宿区西新宿2-8-1" の場合
+    const match = props.customer.address.match(/^(.*?[都道府県])(.+?[市区町村])(.*)$/);
+    return {
+        prefecture: match ? match[1] : null, // 東京都
+        city: match ? match[2] : null,      // 新宿区
+        detail: match ? match[3] : null     // 西新宿2-8-1
+    };
+})
+
 const form = reactive({
     name: props.customer.name,
     kana: props.customer.kana,
@@ -22,9 +31,9 @@ const form = reactive({
     email: props.customer.email,
     postcode: props.customer.postcode,
     birthday: props.customer.birthday,
-    prefecture: props.customer.prefecture,
-    city: props.customer.city,
-    address: props.customer.address,
+    prefecture: formattedCustomers.value.prefecture,
+    city: formattedCustomers.value.city,
+    address: formattedCustomers.value.detail,
     gender: props.customer.gender,
     memo: props.customer.memo
 })
@@ -45,6 +54,10 @@ const fetchAddress = async (inputZipCode) => {
     }
 }
 
+watch(form, (newVal)=>{
+    console.log(newVal);
+})
+
 const updateCustomer = (customerId) => {
     Inertia.put(route('customers.update', customerId), form, {
         onError: (errors) => console.error(errors)
@@ -52,7 +65,7 @@ const updateCustomer = (customerId) => {
 }
 
 onMounted(() => {
-    console.log(props.customer)
+    console.log(formattedCustomers)
 })
 
 

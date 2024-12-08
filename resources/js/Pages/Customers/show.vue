@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
 // import { Link } from '@inertiajs/inertia-vue3';
 // import ValidationErrors from '@/Components/ValidationErrors.vue';
-import { reactive } from 'vue'
+import { computed, onMounted, reactive } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import BackToPreviousPageButton from '@/Components/BackToPreviousPageButton.vue';
 import { Link } from '@inertiajs/inertia-vue3';
@@ -22,6 +22,20 @@ const props = defineProps({
 // const editItem = (itemId) => {
 //     Inertia.get(`/items/${itemId}/edit`)
 // }
+
+const formattedCustomers = computed(() => {
+    // 例: "東京都新宿区西新宿2-8-1" の場合
+    const match = props.customer.address.match(/^(.*?[都道府県])(.+?[市区町村])(.*)$/);
+    return {
+        prefecture: match ? match[1] : null, // 東京都
+        city: match ? match[2] : null,      // 新宿区
+        detail: match ? match[3] : null     // 西新宿2-8-1
+    };
+})
+
+onMounted(() => {
+    console.log(formattedCustomers);
+})  
 
 </script>
 
@@ -89,7 +103,7 @@ const props = defineProps({
                             <label for="postcode" class="leading-7 text-sm text-gray-600">都道府県</label>
                             <input disabled type="text" id="prefecture" name="prefecture"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                :value="props.customer.prefecture">
+                                :value="formattedCustomers.prefecture">
                             <!-- <label for="prefecture" class="leading-7 text-sm text-gray-600">都道府県</label>
                                     <input type="text" v-model="form.prefecture" id="prefecture" name="prefecture"
                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
@@ -100,15 +114,15 @@ const props = defineProps({
                             <label for="city" class="leading-7 text-sm text-gray-600">市町村</label>
                             <input disabled type="text" id="city" name="city"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                :value="props.customer.city">
+                                :value="formattedCustomers.city">
                         </div>
                     </div>
                     <div class="p-2 w-full">
                         <div class="relative">
                             <label for="address" class="leading-7 text-sm text-gray-600">市町村以降の住所</label>
-                            <input type="text" id="address" name="address"
+                            <input disabled type="text" id="address" name="address"
                                 class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
-                                :value="props.customer.address">
+                                :value="formattedCustomers.detail">
                         </div>
                     </div>
                     <div class="p-2 w-full">
@@ -122,14 +136,14 @@ const props = defineProps({
                     <!-- <div class="flex flex-wrap justify-center -m-2"> -->
                     <div class="p-2 w-full">
                         <div class="relative w-[300px]">
-                            <input type="radio" id="men" name="men" :checked="props.customer.gender === 0"
+                            <input disabled type="radio" id="men" name="men" :checked="props.customer.gender === 0"
                                 :value=props.customer.gender>
                             <label for="men" class="leading-7 text-sm text-gray-600">男</label>
 
-                            <input type="radio" id="women" name="women" :checked="props.customer.gender === 1"
+                            <input disabled type="radio" id="women" name="women" :checked="props.customer.gender === 1"
                                 :value=props.customer.gender>
                             <label for="women" class="leading-7 text-sm text-gray-600">女</label>
-                            <input type="radio" id="others" name="others" :checked="props.customer.gender === 2"
+                            <input disabled type="radio" id="others" name="others" :checked="props.customer.gender === 2"
                                 :value=props.customer.gender>
                             <label for="others" class="leading-7 text-sm text-gray-600">その他</label>
                         </div>
@@ -137,7 +151,7 @@ const props = defineProps({
                     <div class="p-2 w-full">
                         <div class="relative w-full">
                             <label for="memo" class="leading-7 text-sm text-gray-600">Memo</label>
-                            <textarea id="memo" name="memo"
+                            <textarea disabled id="memo" name="memo"
                                 class="w-full h-[100px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-6 transition-colors duration-200 ease-in-out"
                                 :value="props.customer.memo"></textarea>
                         </div>

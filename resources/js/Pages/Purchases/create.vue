@@ -1,16 +1,11 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-// import { Link } from '@inertiajs/inertia-vue3';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
 import { computed, onMounted, reactive, ref, watch } from 'vue'
 import { Inertia } from '@inertiajs/inertia'
 import BackToPreviousPageButton from '@/Components/BackToPreviousPageButton.vue';
-import axios from 'axios';
-import jsonpAdapter from 'axios-jsonp'
 import Pagination from '@/Components/Pagination.vue';
-import configPref from '@/pref';
-import pref from '@/pref';
 import { getToday } from '@/common';
 import MicroModal from '@/Components/MicroModal.vue';
 import { isEmpty } from 'lodash';
@@ -28,11 +23,10 @@ const form = reactive({
     date: null,
     status: true,
     customer_id: null,
-    items: {
-        id: null,
+    items: props.items.map(item => ({
+        id: item.id,
         quantity: null
-    },
-    purchase_num: []
+    }))
 })
 
 const isShow = ref(false);
@@ -68,6 +62,20 @@ watch(matchedCustomers, (newVal) => {
     openSearchBox.value = newVal.length > 0;
 })
 
+let search = ref('')
+
+const searchedItems = computed(() => {
+    if (isEmpty(search.value)) {
+        return props.items
+    } else {
+        const result = props.items.filter(item =>
+            item.name.includes(search.value)
+        )
+        return result
+    }
+}
+)
+
 const storePurchase = () => {
     form.items = props.items
         .filter(item => form.purchase_num[item.id - 1] > 0)
@@ -86,60 +94,34 @@ const purchase_num_arr = computed(() => {
 
 const total_price_per_product = computed(() => {
     return props.items.map((item, index) => {
-        const quantity = form.purchase_num[index] || 0;
+        const quantity = form.items[index].quantity || 0;
         return item.price * quantity;
     });
 });
 
-const deleteItem = (index) => {
-    props.items.splice(index, 1)
-    // Inertia.delete(`purchases/${purchaseId}/items/${itemId}`, {
-    //     onBefore: () => confirm("本当に削除しますか？"),
-    // });
-}
-
-// const total_price_all_products = computed(() => {
-//     return props.items.reduce((sum, item) => {
-//         const quantity = form.purchase_num[item.id - 1] || 0;
-//         return sum + item.price * quantity;
-//     }, 0);
-// });
-
 const total_price_all_products = computed(() => {
-    return props.items.reduce((sum, item, index) => {
-        if (form.items[index]) {
-            const quantity = form.items[index].quantity || 0;
-            return sum + item.item_price * quantity;
-        }
+    return props.items.reduce((sum, item, index) => { 
+        const quantity = form.items[index].quantity || 0;
+        return sum + item.price * quantity;
     }, 0);
 });
 
-watch(
-    () => form.items, // form.items を監視
-    (newVal, oldVal) => {
-        newVal.forEach((item, index) => {
-            console.log(item.quantity)
-            console.log(form.items)
-            form.items
-            if (item.quantity !== form.items[index].quantity) {
-                form.items[index].quantity = item; // 変更があれば代入
-            }
-        });
-    },
-    { deep: true } // 配列やオブジェクトの中身を監視する
+watch(form.items, (newVal) => {
+    newVal.forEach((item, index) => {
+        if (form.items[index].quantity !== null) {
+            form.items[index].quantity = item.quantity; // 変更があれば代入
+        }
+    })
+}
 );
 
-
-
 onMounted(() => {
-    console.log(props.items)
+    console.log(props.items);
+    // console.log(total_price_per_product);
+    // console.log(total_price_all_products);
+    // console.log(searchedItems);
     form.date = getToday()
-    console.log(form.items)
-    form.items.push({
-        id: null,
-        quantity: null
-    })
-})  // console.log(purchase_num_arr.value)
+})
 
 
 </script>
@@ -171,9 +153,7 @@ onMounted(() => {
                             </div>
                             <div class="p-2 w-full">
                                 <div class="relative">
-                                    <label for="postcode" class="leading-7 text-sm text-gray-600">顧客名</label>
-                                    <!-- <div v:on="form.customer_id" id="prefecture" name="prefecture"
-                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
+                                    <label for="name" class="leading-7 text-sm text-gray-600">顧客名</label>
                                     <input id="prefecture" name="prefecture"
                                         class="w-full h-[42px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                         v-model="selectedCustomer.name">
@@ -185,21 +165,15 @@ onMounted(() => {
                                             {{ customer.name }}
                                         </div>
                                     </div>
-
-                                    <!-- <button class="bg-blue-300 text-white py-2 px-2 mx-4 w-[100px]" 
-                                            @click.prevent="openModal">検索</button> -->
-
-
-                                    <!-- <option v-for="customer in props.customers" :value="customer.id"
-                                            :key="customer.id">
-                                            {{ customer.name }}
-                                        </option> -->
-                                    <!-- </div> -->
-                                    <MicroModal v-if="isShow" :customers="props.customers"
-                                        @update:customerId="setCustomerId" />
                                 </div>
                             </div>
-
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <input type="text" name="search" v-model="search">
+                                    <button class="bg-blue-300 text-white py-2 px-2 mx-4"
+                                        @click="searchItems">検索</button>
+                                </div>
+                            </div>
                             <div class="p-2 w-full">
                                 <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                                     <thead>
@@ -219,7 +193,7 @@ onMounted(() => {
                                             <th
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                                 小計
-                                            </th>                                           
+                                            </th>
                                         </tr>
                                     </thead>
                                 </table>
@@ -228,7 +202,7 @@ onMounted(() => {
                                     <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                                         <tbody>
                                             <!-- <tr v-for="customer in state.customers" :key="customer.id" @click="showCustomer(customer.id)"> -->
-                                            <tr v-for="(item, index) in props.items" :key="index">
+                                            <tr v-for="(item, index) in searchedItems" :key="item.id">
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                                     item.id
                                                     }}</td>
@@ -239,7 +213,7 @@ onMounted(() => {
                                                     item.price }}
                                                 </td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                    <select v-model="form.items[index]" id="prefecture"
+                                                    <select v-model="form.items[index].quantity" id="prefecture"
                                                         name="prefecture"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                                         <option v-for="purchase_num in purchase_num_arr[index]"
@@ -250,6 +224,7 @@ onMounted(() => {
                                                 </td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     {{ total_price_per_product[index] }}
+                                                    <!-- {{ form.items[index].quantity != null ? item.price * form.items[index].quantity : 0 }} -->
                                                 </td>
                                                 <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     <select v-model="form.purchase_num[item.id - 1]" id="prefecture"
@@ -258,8 +233,8 @@ onMounted(() => {
                                                          <option v-for="item in props.items" :key="item.id">
                                                                 {{ item }}
                                                             </option> -->
-                                                
-                                                        <!-- <option v-if="purchase_num_arr[item.id - 1].length > 0"
+
+                                                <!-- <option v-if="purchase_num_arr[item.id - 1].length > 0"
                                                             v-for="purchase_num in purchase_num_arr[item.id - 1]"
                                                             :key="purchase_num">
                                                             {{ purchase_num }}
@@ -292,6 +267,9 @@ onMounted(() => {
                                 <!-- <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                                     <Pagination :links=props.items.links></Pagination>
                                 </div> -->
+                                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                                    <Pagination :links=props.items></Pagination>
+                                </div>
                                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                                     合計金額 {{ total_price_all_products }}
                                 </div>
