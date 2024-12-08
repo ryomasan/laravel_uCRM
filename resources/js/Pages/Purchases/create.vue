@@ -219,10 +219,7 @@ onMounted(() => {
                                             <th
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                                 小計
-                                            </th>
-                                            <!-- <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                            </th> -->
+                                            </th>                                           
                                         </tr>
                                     </thead>
                                 </table>
@@ -258,28 +255,36 @@ onMounted(() => {
                                                     <select v-model="form.purchase_num[item.id - 1]" id="prefecture"
                                                         name="prefecture"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                        
-                                                        <option v-if="purchase_num_arr[item.id - 1].length > 0"
+                                                         <option v-for="item in props.items" :key="item.id">
+                                                                {{ item }}
+                                                            </option> -->
+                                                
+                                                        <!-- <option v-if="purchase_num_arr[item.id - 1].length > 0"
                                                             v-for="purchase_num in purchase_num_arr[item.id - 1]"
                                                             :key="purchase_num">
                                                             {{ purchase_num }}
                                                         </option>
                                                         <option v-else>
                                                             {{ 0 }}
-                                                        </option>
-                                                    </select>
+                                                        </option> 
+                                                    </select>->
                                                 </td>
+
+                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                                        <select v-model="form.items[index].quantity" id="prefecture"
+                                                            name="prefecture"
+                                                            class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                            <option v-for="purchase_num in purchase_num_arr[index]"
+                                                                :key="purchase_num">
+                                                                {{ purchase_num }}
+                                                            </option>
+                                                        </select>
+                                                    </td> -->
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     {{ form.purchase_num[item.id -
                                                         1] == null ? 0 : total_price_per_product[item.id -
                                                         1] }}
-                                                </td> -->
-
-                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                    <button @click.prevent="deleteItem(index)"
-                                                        class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                                                        削除</button>
-                                                </td> -->
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>

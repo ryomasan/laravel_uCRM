@@ -94,13 +94,16 @@ onMounted(() => {
                                     商品No</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    商品名</th>
+                                    商品名</th>                           
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     価格</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫数</th>
+                                    <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    備考</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     備考</th>
@@ -120,7 +123,7 @@ onMounted(() => {
                             <tbody>
                                 <tr v-for="item in searchedItems" :key="item.id" @click="showItem(item.id)">
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>                                    
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>

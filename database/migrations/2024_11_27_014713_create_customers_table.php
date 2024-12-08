@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('postcode');
             $table->string('address')->unique();
-            $table->date('birthday')->nullable();
+            $table->date('birthday');
             $table->tinyInteger('gender'); // 0男性, 1女性、2その他
             $table->text('memo')->nullable();
             $table->timestamps();

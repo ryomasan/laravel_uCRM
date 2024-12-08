@@ -4,6 +4,8 @@ import { Head } from '@inertiajs/vue3';
 // import { Link } from '@inertiajs/inertia-vue3';
 import ValidationErrors from '@/Components/ValidationErrors.vue';
 import { onMounted, reactive } from 'vue'
+import { reactive } from 'vue'
+import jsonpAdapter from 'axios-jsonp'
 import { Inertia } from '@inertiajs/inertia'
 import BackToPreviousPageButton from '@/Components/BackToPreviousPageButton.vue';
 import configPref from '@/pref';
@@ -14,10 +16,10 @@ const props = defineProps({
 })
 
 const form = reactive({
-    id: props.customer.id,
-    kana: props.customer.kana,
     name: props.customer.name,
+    kana: props.customer.kana,
     tel: props.customer.tel,
+    email: props.customer.email,
     postcode: props.customer.postcode,
     birthday: props.customer.birthday,
     prefecture: props.customer.prefecture,
@@ -97,6 +99,21 @@ onMounted(() => {
                             </div>
                             <div class="p-2 w-full">
                                 <div class="relative">
+                                    <label for="email" class="leading-7 text-sm text-gray-600">Email</label>
+                                    <input type="email" v-model="form.email" id="email" name="email"
+                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                </div>
+                            </div>
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    <label for="postcode" class="leading-7 text-sm text-gray-600">郵便番号</label>
+                                    <input type="number" v-model="form.postcode" @input="fetchAddress(form.postcode)"
+                                        id="postcode" name="postcode"
+                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                </div>
+                            </div>
+                            <div class="p-2 w-full">
+                                <div class="relative">
                                     <label for="postcode" class="leading-7 text-sm text-gray-600">都道府県</label>
                                     <select v-model="form.prefecture" id="prefecture" name="prefecture" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                         <option disabled value="">都道府県</option>
@@ -162,5 +179,6 @@ onMounted(() => {
                 </div>
             </div>
         </section>
+
     </AuthenticatedLayout>
 </template>

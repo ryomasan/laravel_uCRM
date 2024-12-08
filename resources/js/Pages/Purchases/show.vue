@@ -27,7 +27,7 @@ onMounted(() => {
 
 <template>
 
-    <Head title="商品詳細" />
+    <Head title="顧客詳細" />
     <AuthenticatedLayout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">購入履歴</h2>
@@ -56,7 +56,7 @@ onMounted(() => {
                         </div>
                         <div class="p-2 w-full">
                             <div class="relative">
-                                <label for="name" class="leading-7 text-sm text-gray-600">購入商品</label>
+                                <label for="name" class="leading-7 text-sm text-gray-600">購入顧客</label>
                                 <!-- Fixed Header -->
                                 <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                                     <thead>
@@ -66,7 +66,7 @@ onMounted(() => {
                                                 id</th>
                                             <th
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                                商品名</th>
+                                                顧客名</th>
                                             <th
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                                 金額</th>
