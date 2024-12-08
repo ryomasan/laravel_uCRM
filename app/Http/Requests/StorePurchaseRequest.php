@@ -24,6 +24,7 @@ class StorePurchaseRequest extends FormRequest
     public function rules()
     {
         return [
+            'date' => ['required', 'date'],
             'customer_id' => ['required']
         ];
     }

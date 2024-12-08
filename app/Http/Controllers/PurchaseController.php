@@ -168,11 +168,11 @@ class PurchaseController extends Controller
      */
     public function destroy(Purchase $purchase)
     {
-        // $purchase->items()->detach($item->id);
-        // return response()->json([
-        //     'message' => "削除しました",
-        //     'status' => "success"
-        // ]);
+        $purchase->delete();
+        return to_route('purchases.index')->with([
+            'message' => "削除しました",
+            'status' => "success"
+        ]);
     }
 
     // public function removeItemFromPurchase(Purchase $purchase, Item $item)

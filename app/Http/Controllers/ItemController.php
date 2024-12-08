@@ -103,7 +103,7 @@ class ItemController extends Controller
             'price' => $request->price,
             'stocks' => $request->stocks,
             'memo' => $request->memo,
-            'is_selling' => $request->is_selling,
+            // 'is_selling' => $request->is_selling,
         ]);
         return to_route('items.index')->with([
             'message' => "更新しました",
@@ -119,6 +119,8 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
+        // $item->purchases()->delete();
+        // $item->delete();
         return to_route('items.index')->with([
             'message' => "削除しました",
             'status' => "success"

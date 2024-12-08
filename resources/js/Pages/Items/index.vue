@@ -74,7 +74,7 @@ onMounted(() => {
         <template #header>
             <div class="flex justify-between gap-96">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">商品一覧</h2>
-                <FlashMessage />
+                <!-- <FlashMessage /> -->
             </div>
         </template>
         <section class="text-gray-600 body-font">
@@ -97,13 +97,13 @@ onMounted(() => {
                                     商品名</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    備考</th>
-                                <th
-                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     価格</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫数</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                    備考</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫状況</th>
@@ -121,9 +121,9 @@ onMounted(() => {
                                 <tr v-for="item in searchedItems" :key="item.id" @click="showItem(item.id)">
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                         getItemStatus(item.isSelling) }}
                                     </td>
@@ -136,17 +136,41 @@ onMounted(() => {
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- Scrollable Body -->
+                        <div class="overflow-y-scroll h-[350px]">
+                            <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
+                                <tbody>
+                                    <tr v-for="item in props.items" :key="item.id" @click="showItem(item.id)">
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
+                                            getItemStatus(item.isSelling) }}
+                                        </td>
+                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                            <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                            <button @click.stop="deleteItem(item.id)"
+                                                class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
+                                                削除</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- </div> -->
                     </div>
-                    <!-- </div> -->
-                </div>
-                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Pagination :links=props.items.links></Pagination>
-                </div>
-                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Link as="button"
-                        class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
-                        :href="route('items.create')">
-                    商品登録</Link>
+                    <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                        <Pagination :links=props.items></Pagination>
+                    </div>
+                    <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                        <Link as="button"
+                            class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                            :href="route('items.create')">
+                        商品登録</Link>
+                    </div>
                 </div>
             </div>
         </section>

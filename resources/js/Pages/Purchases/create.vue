@@ -8,10 +8,13 @@ import { Inertia } from '@inertiajs/inertia'
 import BackToPreviousPageButton from '@/Components/BackToPreviousPageButton.vue';
 import axios from 'axios';
 import jsonpAdapter from 'axios-jsonp'
+import Pagination from '@/Components/Pagination.vue';
 import configPref from '@/pref';
 import pref from '@/pref';
 import { getToday } from '@/common';
 import MicroModal from '@/Components/MicroModal.vue';
+import { isEmpty } from 'lodash';
+
 
 
 
@@ -62,7 +65,7 @@ const setCustomer = (customerId, customerName) => {
 }
 
 watch(matchedCustomers, (newVal) => {
-    openSearchBox.value = newVal.length > 0;    
+    openSearchBox.value = newVal.length > 0;
 })
 
 const storePurchase = () => {
@@ -95,18 +98,49 @@ const deleteItem = (index) => {
     // });
 }
 
+// const total_price_all_products = computed(() => {
+//     return props.items.reduce((sum, item) => {
+//         const quantity = form.purchase_num[item.id - 1] || 0;
+//         return sum + item.price * quantity;
+//     }, 0);
+// });
+
 const total_price_all_products = computed(() => {
-    return props.items.reduce((sum, item) => {
-        const quantity = form.purchase_num[item.id - 1] || 0;
-        return sum + item.price * quantity;
+    return props.items.reduce((sum, item, index) => {
+        if (form.items[index]) {
+            const quantity = form.items[index].quantity || 0;
+            return sum + item.item_price * quantity;
+        }
     }, 0);
 });
 
+watch(
+    () => form.items, // form.items を監視
+    (newVal, oldVal) => {
+        newVal.forEach((item, index) => {
+            console.log(item.quantity)
+            console.log(form.items)
+            form.items
+            if (item.quantity !== form.items[index].quantity) {
+                form.items[index].quantity = item; // 変更があれば代入
+            }
+        });
+    },
+    { deep: true } // 配列やオブジェクトの中身を監視する
+);
+
+
+
 onMounted(() => {
+    console.log(props.items)
     form.date = getToday()
-    console.log(purchase_num_arr)
-}   // console.log(purchase_num_arr.value)
-)
+    console.log(form.items)
+    form.items.push({
+        id: null,
+        quantity: null
+    })
+})  // console.log(purchase_num_arr.value)
+
 
 </script>
 
@@ -137,7 +171,7 @@ onMounted(() => {
                             </div>
                             <div class="p-2 w-full">
                                 <div class="relative">
-                                    <label for="postcode" class="leading-7 text-sm text-gray-600">会員名</label>
+                                    <label for="postcode" class="leading-7 text-sm text-gray-600">顧客名</label>
                                     <!-- <div v:on="form.customer_id" id="prefecture" name="prefecture"
                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"> -->
                                     <input id="prefecture" name="prefecture"
@@ -186,9 +220,9 @@ onMounted(() => {
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                                 小計
                                             </th>
-                                            <th
+                                            <!-- <th
                                                 class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                            </th>
+                                            </th> -->
                                         </tr>
                                     </thead>
                                 </table>
@@ -208,12 +242,23 @@ onMounted(() => {
                                                     item.price }}
                                                 </td>
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                                    <select v-model="form.items[index]" id="prefecture"
+                                                        name="prefecture"
+                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                                        <option v-for="purchase_num in purchase_num_arr[index]"
+                                                            :key="purchase_num">
+                                                            {{ purchase_num }}
+                                                        </option>
+                                                    </select>
+                                                </td>
+                                                <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                                    {{ total_price_per_product[index] }}
+                                                </td>
+                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     <select v-model="form.purchase_num[item.id - 1]" id="prefecture"
                                                         name="prefecture"
                                                         class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                        <!-- <option v-for="item in props.items" :key="item.id">
-                                                                {{ item }}
-                                                            </option> -->
+                                                        
                                                         <option v-if="purchase_num_arr[item.id - 1].length > 0"
                                                             v-for="purchase_num in purchase_num_arr[item.id - 1]"
                                                             :key="purchase_num">
@@ -228,21 +273,20 @@ onMounted(() => {
                                                     {{ form.purchase_num[item.id -
                                                         1] == null ? 0 : total_price_per_product[item.id -
                                                         1] }}
-                                                </td>
-                                                <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                    <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                                </td> -->
+
+                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     <button @click.prevent="deleteItem(index)"
                                                         class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
                                                         削除</button>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         </tbody>
-
                                     </table>
-
                                 </div>
-
-
+                                <!-- <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                                    <Pagination :links=props.items.links></Pagination>
+                                </div> -->
                                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                                     合計金額 {{ total_price_all_products }}
                                 </div>

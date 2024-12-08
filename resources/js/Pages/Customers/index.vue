@@ -34,6 +34,18 @@ const searchedCustomers = computed(() => {
 }
 )
 
+const showCustomer = (customerId) => {
+    Inertia.get(`/customers/${customerId}`, customerId)
+}
+
+const deleteCustomer = (customerId) => {
+    Inertia.delete(`/customers/${customerId}`, {
+        onBefore: () => {
+            confirm("本当に削除しますか？")
+        }
+    })
+}
+
 onMounted(() => {
     console.log(props.customers)
 })
@@ -95,7 +107,7 @@ onMounted(() => {
         <template #header>
             <div class="flex justify-between gap-96">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">顧客一覧</h2>
-                <FlashMessage />
+                <!-- <FlashMessage /> -->
             </div>
         </template>
         <section class="text-gray-600 body-font ">
@@ -162,7 +174,7 @@ onMounted(() => {
                 </InfiniteLoading> -->
 
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                    <Pagination :links=props.customers.links></Pagination>
+                    <Pagination :links=props.items.links />
                 </div>
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                     <Link as="button"

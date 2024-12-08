@@ -29,8 +29,7 @@ const submit = () => {
             <div>
                 <InputLabel for="name" value="Name" />
 
-                <TextInput
-                    id="name"
+                <TextInput                    
                     type="text"
                     class="mt-1 block w-full"
                     v-model="form.name"
