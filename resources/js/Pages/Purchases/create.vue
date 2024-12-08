@@ -280,11 +280,11 @@ onMounted(() => {
                                                             </option>
                                                         </select>
                                                     </td> -->
-                                                <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                                     {{ form.purchase_num[item.id -
                                                         1] == null ? 0 : total_price_per_product[item.id -
                                                         1] }}
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         </tbody>
                                     </table>

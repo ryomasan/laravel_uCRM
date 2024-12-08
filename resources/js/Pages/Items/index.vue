@@ -51,7 +51,7 @@ const getItemStatus = (isSelling) => {
 
 
 const showItem = (itemId) => {
-    Inertia.get(`/items/${itemId}`);
+    Inertia.get(`/items/${itemId}`, itemId);
 }
 
 const deleteItem = (itemId) => {
@@ -94,14 +94,14 @@ onMounted(() => {
                                     商品No</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    商品名</th>                           
+                                    商品名</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     価格</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫数</th>
-                                    <th
+                                <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     備考</th>
                                 <th
@@ -123,7 +123,7 @@ onMounted(() => {
                             <tbody>
                                 <tr v-for="item in searchedItems" :key="item.id" @click="showItem(item.id)">
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
-                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>                                    
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
@@ -139,31 +139,6 @@ onMounted(() => {
                                 </tr>
                             </tbody>
                         </table>
-
-                        <!-- Scrollable Body -->
-                        <div class="overflow-y-scroll h-[350px]">
-                            <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
-                                <tbody>
-                                    <tr v-for="item in props.items" :key="item.id" @click="showItem(item.id)">
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.id }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.name }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.memo }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.price }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{ item.stocks }}</td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
-                                            getItemStatus(item.isSelling) }}
-                                        </td>
-                                        <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                            <!-- 　tr内の@clickへのpropagationの阻止　 -->
-                                            <button @click.stop="deleteItem(item.id)"
-                                                class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
-                                                削除</button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- </div> -->
                     </div>
                     <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                         <Pagination :links=props.items></Pagination>

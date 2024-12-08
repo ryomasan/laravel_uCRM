@@ -26,8 +26,7 @@ const props = defineProps({
             <BackToPreviousPageButton />
             <div class="container px-5 py-12 mx-auto">
                 <div class="flex flex-col text-center w-full mb-12">
-                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">商品詳細</h1>
-                    <p class="lg:w-2/3 mx-auto leading-relaxed text-base">購入する商品の情報を入力してください</p>
+                    <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">商品詳細</h1>                    
                 </div>
                 <div class="lg:w-1/2 md:w-2/3 mx-auto">
                     <!-- <form @submit.prevent="editItem(props.item.id)"> -->

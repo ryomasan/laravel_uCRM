@@ -173,9 +173,10 @@ onMounted(() => {
                     全件取得済み
                 </InfiniteLoading> -->
 
-                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                <!-- <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                     <Pagination :links=props.items.links />
-                </div>
+                </div> -->
+                
                 <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                     <Link as="button"
                         class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
