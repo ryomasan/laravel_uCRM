@@ -50,14 +50,14 @@ class Handler extends ExceptionHandler
         });
     }
 
-    public function render($request, Throwable $exception)
-    {
-        // 追加2
-        //エラー画面をユーザーに見せる必要はないので、ログイン画面にリダイレクトさせる
-        if ($exception instanceof TokenMismatchException) {
-            return redirect('/register');
-        }
+    // public function render($request, Throwable $exception)
+    // {
+    //     // 追加2
+    //     //エラー画面をユーザーに見せる必要はないので、ログイン画面にリダイレクトさせる
+    //     if ($exception instanceof TokenMismatchException) {
+    //         return redirect('/register');
+    //     }
 
-        return parent::render($request, $exception);
-    }
+    //     return parent::render($request, $exception);
+    // }
 }
