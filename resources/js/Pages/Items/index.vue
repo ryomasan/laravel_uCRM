@@ -61,7 +61,7 @@ const deleteItem = (itemId) => {
 }
 
 onMounted(() => {
-    console.log(props.items.links);
+    console.log(props.items);
 })
 
 </script>
@@ -141,7 +141,7 @@ onMounted(() => {
                         </table>
                     </div>
                     <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                        <Pagination :links=props.items></Pagination>
+                        <Pagination :links=props.items.links></Pagination>
                     </div>
                     <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                         <Link as="button"

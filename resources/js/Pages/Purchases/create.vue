@@ -10,9 +10,6 @@ import { getToday } from '@/common';
 import MicroModal from '@/Components/MicroModal.vue';
 import { isEmpty } from 'lodash';
 
-
-
-
 const props = defineProps({
     errors: Object,
     customers: Object,
@@ -23,9 +20,9 @@ const form = reactive({
     date: null,
     status: true,
     customer_id: null,
-    items: props.items.map(item => ({
+    items: props.items.data.map(item => ({
         id: item.id,
-        quantity: null
+        quantity: 0
     }))
 })
 
@@ -43,6 +40,7 @@ const selectedCustomer = reactive({
 //     form.customer_id = selectedCustomerId
 //     selectedCustomer.value = props.customers.find(customer => customer.id === selectedCustomerId) || {};;
 // }
+
 const matchedCustomers = computed(() => {
     if (!selectedCustomer || !selectedCustomer.name) {
         return [];
@@ -51,6 +49,13 @@ const matchedCustomers = computed(() => {
 })
 
 const openSearchBox = ref(false);
+
+const closeModal = () => {
+    openSearchBox.value = false
+}
+// const onClickOutside = () => {
+//     openSearchBox.value = false
+// }
 
 const setCustomer = (customerId, customerName) => {
     form.customer_id = customerId;
@@ -66,9 +71,9 @@ let search = ref('')
 
 const searchedItems = computed(() => {
     if (isEmpty(search.value)) {
-        return props.items
+        return props.items.data
     } else {
-        const result = props.items.filter(item =>
+        const result = props.items.data.filter(item =>
             item.name.includes(search.value)
         )
         return result
@@ -77,30 +82,24 @@ const searchedItems = computed(() => {
 )
 
 const storePurchase = () => {
-    form.items = props.items
-        .filter(item => form.purchase_num[item.id - 1] > 0)
-        .map(item => ({
-            id: item.id,
-            quantity: form.purchase_num[item.id - 1]
-        }));
     Inertia.post('/purchases', form);
 };
 
 
 
 const purchase_num_arr = computed(() => {
-    return props.items.map(item => Array.from({ length: item.stocks + 1 }, (_, i) => i));
+    return props.items.data.map(item => Array.from({ length: item.stocks + 1 }, (_, i) => i));
 });
 
 const total_price_per_product = computed(() => {
-    return props.items.map((item, index) => {
+    return props.items.data.map((item, index) => {
         const quantity = form.items[index].quantity || 0;
         return item.price * quantity;
     });
 });
 
 const total_price_all_products = computed(() => {
-    return props.items.reduce((sum, item, index) => { 
+    return props.items.data.reduce((sum, item, index) => {
         const quantity = form.items[index].quantity || 0;
         return sum + item.price * quantity;
     }, 0);
@@ -112,15 +111,13 @@ watch(form.items, (newVal) => {
             form.items[index].quantity = item.quantity; // 変更があれば代入
         }
     })
+    console.log(form.items);
 }
 );
 
 onMounted(() => {
-    console.log(props.items);
-    // console.log(total_price_per_product);
-    // console.log(total_price_all_products);
-    // console.log(searchedItems);
     form.date = getToday()
+    console.log(props.items)
 })
 
 
@@ -157,17 +154,18 @@ onMounted(() => {
                                     <input id="prefecture" name="prefecture"
                                         class="w-full h-[42px] bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                                         v-model="selectedCustomer.name">
-                                    <div v-if="openSearchBox"
-                                        class="absolute w-[150px] h-[250px] overflow-y-scroll bg-white border border-gray-300 rounded shadow-md">
+                                    <div v-if="openSearchBox" v-click-outside="closeModal"
+                                        class="absolute z-30 w-[150px] h-[250px] overflow-y-scroll bg-white border border-gray-300 rounded shadow-md">
                                         <div v-for="customer in matchedCustomers" :key="customer.id"
                                             class="p-2 hover:bg-gray-200 cursor-pointe"
-                                            @click="setCustomer(customer.id, customer.name)">
+                                            @click.stop="setCustomer(customer.id, customer.name)">
                                             {{ customer.name }}
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
-                            <div class="p-2 w-full">
+                            <div class="p-2 w-full z-20">
                                 <div class="relative">
                                     <input type="text" name="search" v-model="search">
                                     <button class="bg-blue-300 text-white py-2 px-2 mx-4"
@@ -175,33 +173,33 @@ onMounted(() => {
                                 </div>
                             </div>
                             <div class="p-2 w-full">
-                                <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
-                                    <thead>
-                                        <tr>
-                                            <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
-                                                id</th>
-                                            <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                                商品名</th>
-                                            <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                                金額</th>
-                                            <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                                数量</th>
-                                            <th
-                                                class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                                小計
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                </table>
-                                <!-- Scrollable Body -->
+                                <div class="relative">
+                                    <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
+                                        <thead>
+                                            <tr>
+                                                <th
+                                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                                                    id</th>
+                                                <th
+                                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                    商品名</th>
+                                                <th
+                                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                    金額</th>
+                                                <th
+                                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                    数量</th>
+                                                <th
+                                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                                    小計
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
                                 <div class="overflow-y-scroll h-[350px]">
                                     <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
                                         <tbody>
-                                            <!-- <tr v-for="customer in state.customers" :key="customer.id" @click="showCustomer(customer.id)"> -->
                                             <tr v-for="(item, index) in searchedItems" :key="item.id">
                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">{{
                                                     item.id
@@ -226,66 +224,30 @@ onMounted(() => {
                                                     {{ total_price_per_product[index] }}
                                                     <!-- {{ form.items[index].quantity != null ? item.price * form.items[index].quantity : 0 }} -->
                                                 </td>
-                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                    <select v-model="form.purchase_num[item.id - 1]" id="prefecture"
-                                                        name="prefecture"
-                                                        class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                         <option v-for="item in props.items" :key="item.id">
-                                                                {{ item }}
-                                                            </option> -->
 
-                                                <!-- <option v-if="purchase_num_arr[item.id - 1].length > 0"
-                                                            v-for="purchase_num in purchase_num_arr[item.id - 1]"
-                                                            :key="purchase_num">
-                                                            {{ purchase_num }}
-                                                        </option>
-                                                        <option v-else>
-                                                            {{ 0 }}
-                                                        </option> 
-                                                    </select>->
-                                                </td>
-
-                                                 <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                        <select v-model="form.items[index].quantity" id="prefecture"
-                                                            name="prefecture"
-                                                            class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                                            <option v-for="purchase_num in purchase_num_arr[index]"
-                                                                :key="purchase_num">
-                                                                {{ purchase_num }}
-                                                            </option>
-                                                        </select>
-                                                    </td> -->
-                                                <!-- <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
-                                                    {{ form.purchase_num[item.id -
-                                                        1] == null ? 0 : total_price_per_product[item.id -
-                                                        1] }}
-                                                </td> -->
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                                <!-- <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                            </div>
+
+                            <div class="p-2 w-full">
+                                <!-- <div class="relative"> -->
+                                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                                     <Pagination :links=props.items.links></Pagination>
-                                </div> -->
-                                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                                    <Pagination :links=props.items></Pagination>
-                                </div>
-                                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                                    合計金額 {{ total_price_all_products }}
-                                </div>
-                                <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
-                                    <button type="submit"
-                                        class="flex mx-auto ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
-                                        登録する</button>
                                 </div>
                             </div>
+                            <div class="p-2 w-full">
+                                <div class="relative">
+                                    合計金額 {{ total_price_all_products }}
+                                </div>
+                            </div>
+                            <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                                <button type="submit"
+                                    class="flex mx-auto ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
+                                    登録する</button>
+                            </div>
                         </div>
-                        <!-- <div class="p-2 w-full">
-                            <button type="submit"
-                                class="flex mx-auto ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">
-                                登録
-                            </button>
-                        </div> -->
                     </form>
                 </div>
 
