@@ -17,7 +17,7 @@ class ItemPurchaseSeeder extends Seeder
     public function run()
     {
         $items = Item::all();
-        Purchase::factory(30000)->create()->each(
+        Purchase::factory(50)->create()->each(
             function (Purchase $purchase) use ($items) {
                 $purchase->items()->attach(
                     $items->random(rand(1, 5))->pluck('id')->toArray(),

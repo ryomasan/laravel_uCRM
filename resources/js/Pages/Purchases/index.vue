@@ -55,7 +55,7 @@ onMounted(() => {
         <template #header>
             <div class="flex justify-between gap-96">
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">購入履歴</h2>
-                <FlashMessage />
+                <!-- <FlashMessage /> -->
             </div>
         </template>
         <section class="text-gray-600 body-font">

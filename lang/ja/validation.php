@@ -154,17 +154,22 @@ return [
     */
 
     'attributes' => [
+        //商品登録・編集
         'title'=>'件名',
         'content'=>'内容',
         'name'=>'商品名',
         'memo'=>'備考',
         'price'=>'価格',
         'stocks'=>'在庫数',
+        //顧客登録・編集
         'kana'=>'カナ',
         'tel'=>'電話番号',
         'postcode'=>'郵便番号',
         'address'=>'現住所',
         'birthday'=>'生年月日',
         'gender'=>'性別',
+        //購入情報登録、編集
+        'date'=>'日付',
+        'customer_id'=>'顧客名'
     ]
 ];

@@ -83,7 +83,9 @@ class CustomerController extends Controller
      */
     public function show(Customer $customer)
     {
-        //
+        return Inertia::render('Customers/show', [
+            'customer' => $customer,
+        ]);
     }
 
     /**
@@ -94,7 +96,9 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer)
     {
-        //
+        return Inertia::render('Customers/edit', [
+            'customer' => $customer,
+        ]);
     }
 
     /**
@@ -106,7 +110,24 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
-        //
+        $id = $customer->id;
+        Customer::where('id', $id)->update([
+            'name' => $request->name,
+            'kana' => $request->kana,
+            'tel' => $request->tel,
+            'email' => $request->email,
+            'postcode' => $request->postcode,
+            'address' => $request->prefecture . $request->city . $request->address,
+            'birthday' => $request->birthday,
+            'gender' => $request->gender,
+            'memo' => $request->memo
+            // 'memo' => $request->memo,
+            // 'is_selling' => $request->is_selling,
+        ]);
+        return to_route('customers.index')->with([
+            'message' => "更新しました",
+            'status' => "success"
+        ]);
     }
 
     /**
