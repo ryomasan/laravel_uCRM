@@ -26,12 +26,14 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./:/var/www/html
-    environment:
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_DATABASE=laravel_ucrm
-      - DB_USERNAME=laravel_ucrm
-      - DB_PASSWORD=root
+    # environment:
+    #   - DB_HOST=mysql
+    #   - DB_PORT=3306
+    #   - DB_DATABASE=laravel_ucrm
+    #   - DB_USERNAME=laravel_ucrm
+    #   - DB_PASSWORD=root
+    env_file:
+      - .env
     tty: true
     ports:
       - '8000:8000' # Laravelのポートを公開
@@ -47,11 +49,13 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - '8889:3306'
-    environment:
-      MYSQL_DATABASE: laravel_ucrm
-      MYSQL_USER: laravel_ucrm
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+    # environment:
+    #   MYSQL_DATABASE: laravel_ucrm
+    #   MYSQL_USER: laravel_ucrm
+    #   MYSQL_PASSWORD: root
+    #   MYSQL_ROOT_PASSWORD: root
+    env_file:
+      - .env
 
 volumes:
   node_modules:
