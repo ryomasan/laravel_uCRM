@@ -18,6 +18,6 @@ class Item extends Model
         'memo',
         'price',
         'stocks',
-        'is_seling'
+        'is_seling',
     ];
 }

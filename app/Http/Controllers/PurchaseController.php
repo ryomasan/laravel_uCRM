@@ -34,8 +34,9 @@ class PurchaseController extends Controller
      */
     public function create()
     {
-        $customers = Customer::select('id', 'name', 'kana', 'tel')->get();
-        $items = Item::select('id', 'name', 'price', 'stocks')->get();
+        $query = Item::query();
+        $items = $query->paginate(50);            
+        $customers = Customer::select('id', 'name', 'kana', 'tel')->get();        
         return Inertia::render('Purchases/create', [
             'customers' => $customers,
             'items' => $items
@@ -50,6 +51,7 @@ class PurchaseController extends Controller
      */
     public function store(StorePurchaseRequest $request)
     {
+        // dd($request);
         DB::beginTransaction();
         // dd($request);
         try {
@@ -168,11 +170,11 @@ class PurchaseController extends Controller
      */
     public function destroy(Purchase $purchase)
     {
-        // $purchase->items()->detach($item->id);
-        // return response()->json([
-        //     'message' => "削除しました",
-        //     'status' => "success"
-        // ]);
+        $purchase->delete();
+        return to_route('purchases.index')->with([
+            'message' => "削除しました",
+            'status' => "success"
+        ]);
     }
 
     // public function removeItemFromPurchase(Purchase $purchase, Item $item)

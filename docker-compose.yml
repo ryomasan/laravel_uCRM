@@ -1,0 +1,62 @@
+# version: '3.9'
+
+services:
+  vue:
+    container_name: ucrm_vue
+    image: node:20.18-slim
+    build:
+      # context: ./resources  # VueのDockerfileがある場所
+      context: . # VueのDockerfileがある場所
+      dockerfile: Dockerfile
+    working_dir: /app
+    volumes:
+      - ./:/app:cached # Vueのソースコード共有
+      - /app/node_modules
+    # tty: true
+    ports:
+      - '5173:5173' # Vueのポートを公開
+    command: npm run dev -- --host # Nuxt (Vite) サーバを起動
+
+  laravel:
+    image: php:8.2-fpm
+    container_name: ucrm_laravel
+    # build: 
+    #   context: .  # LaravelのDockerfileがある場所
+    #   dockerfile: Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    environment:
+      - DB_HOST=ucrm_mysql
+      - DB_PORT=3306
+      - DB_DATABASE=laravel_ucrm
+      - DB_USERNAME=laravel_ucrm
+      - DB_PASSWORD=root
+    # env_file:
+    #   - .env
+    tty: true
+    ports:
+      - '8000:8000' # Laravelのポートを公開
+    command: php artisan serve --host=0.0.0.0 --port=8000
+    #  --host=0.0.0.0 --port=8000
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:9.1
+    container_name: ucrm_mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - '8889:3306'
+    environment:
+      MYSQL_DATABASE: laravel_ucrm
+      MYSQL_USER: laravel_ucrm
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    # env_file:
+    #   - .env
+
+volumes:
+  node_modules:
+  mysql_data:

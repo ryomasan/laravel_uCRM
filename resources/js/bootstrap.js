@@ -9,8 +9,15 @@ window._ = _;
 
 import axios from 'axios';
 window.axios = axios;
-
+// CSRF トークンを自動的に送信するように設定
+window.axios.defaults.withCredentials = true; // クロスドメインリクエストの際にクッキーを送信
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+// CSRFトークンを取得してヘッダーに設定
+const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
