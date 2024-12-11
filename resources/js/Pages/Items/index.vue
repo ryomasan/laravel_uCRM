@@ -79,11 +79,11 @@ onMounted(() => {
         </template>
         <section class="text-gray-600 body-font">
             <div class="container px-5 mx-auto">
-                <div class="container lg:w-3/4 mx-auto  my-10">
+                <div class="container w-full mx-auto  my-10">
                     <input type="text" name="search" v-model="search">
                     <button class="bg-blue-300 text-white py-2 px-2 mx-4" @click="searchItems">検索</button>
                 </div>
-                <div class="lg:w-3/4 mx-auto overflow-auto">
+                <div class="w-full mx-auto overflow-auto">
                     <!-- <div class="relative"> -->
                     <!-- Fixed Header -->
                     <table class="w-full text-left whitespace-no-wrap border-collapse table-fixed">
@@ -101,15 +101,16 @@ onMounted(() => {
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫数</th>
-                                <th
-                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
-                                    備考</th>
+
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     備考</th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                     在庫状況</th>
+                                <th
+                                    class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
+                                </th>
                                 <th
                                     class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                                 </th>
@@ -132,6 +133,16 @@ onMounted(() => {
                                     </td>
                                     <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
                                         <!-- 　tr内の@clickへのpropagationの阻止　 -->
+                                        <Link as="button"
+                                            class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                                            :href="route('items.add', item.id)"
+                                            @click.stop
+                                            >
+                                        追加発注
+                                        </Link>
+                                    </td>
+                                    <td class="border-b-2 border-gray-200 px-4 py-3 truncate">
+                                        <!-- 　tr内の@clickへのpropagationの阻止　 -->
                                         <button @click.stop="deleteItem(item.id)"
                                             class="flex text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded">
                                             削除</button>
@@ -143,9 +154,9 @@ onMounted(() => {
                     <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
                         <Pagination :links=props.items.links></Pagination>
                     </div>
-                    <div class="flex pl-4 mt-4 lg:w-2/3 w-full mx-auto">
+                    <div class="flex justify-end gap-5 pl-4 mt-4 w-full mx-auto">
                         <Link as="button"
-                            class="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
+                            class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded"
                             :href="route('items.create')">
                         商品登録</Link>
                     </div>

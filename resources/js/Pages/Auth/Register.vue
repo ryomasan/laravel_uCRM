@@ -15,7 +15,7 @@ const form = useForm({
     terms: false,
 });
 
-const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+// const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
 const submit = () => {
     form.post(route('register'), {

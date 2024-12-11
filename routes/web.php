@@ -48,6 +48,10 @@ Route::get('/component-test', function () {
     return Inertia::render('ComponentTest');
 });
 
+Route::get('/items/{item}/add', [ItemController::class, 'add'])->name('items.add')->middleware(['auth', 'verified']);
+
+Route::patch('/items/{item}/add', [ItemController::class, 'addorder'])->name('items.addorder')->middleware(['auth', 'verified']);
+
 Route::resource('items', ItemController::class)
     ->middleware(['auth', 'verified']);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\UpdateAddOrderRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Models\Item;
 use Inertia\Inertia;
@@ -103,6 +104,41 @@ class ItemController extends Controller
             'price' => $request->price,
             'stocks' => $request->stocks,
             'memo' => $request->memo,
+            // 'is_selling' => $request->is_selling,
+        ]);
+        return to_route('items.index')->with([
+            'message' => "更新しました",
+            'status' => "success"
+        ]);
+    }
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateItemRequest  $request
+     * @param  \App\Models\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function add(Item $item)
+    {
+        return Inertia::render('Items/add', [
+            'item' => $item
+        ]);
+    }
+
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateItemRequest  $request
+     * @param  \App\Models\Item  $item
+     * @return \Illuminate\Http\Response
+     */
+    public function addorder(UpdateAddOrderRequest $request, Item $item)
+    {
+        // dd($item);
+        $id = $item->id;
+        Item::where('id', $id)->update([
+            'stocks' => $item->stocks + $request->add_order_num,        
             // 'is_selling' => $request->is_selling,
         ]);
         return to_route('items.index')->with([
